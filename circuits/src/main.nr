@@ -1,11 +1,59 @@
-fn main(x: Field, y: pub Field) {
-    assert(x != y);
+use dep::std;
+
+global MERKLE_TREE_DEPTH: u32 = 20;
+
+fn main(user_secret: Field,
+    vote_choice: Field,
+    merkle_path: [Field; MERKLE_TREE_DEPTH],
+    merkle_indices: [u1; MERKLE_TREE_DEPTH],
+    merkle_root: pub Field,
+    nullifier: pub Field,
+    poll_id: pub Field,
+    max_options: pub Field
+) {
+    assert((vote_choice as u32) < (max_options as u32));
+    assert((vote_choice as u32) >= 0);
+
+    // verify that the nullifier is correctly computed
+    let computed_nullifier = std::hash::pedersen_hash([user_secret, poll_id]);
+    assert(nullifier == computed_nullifier);
+
+    // Verify that the user is in the eligible voters merkle tree
+    let leaf = std::hash::pedersen_hash([user_secret]);
+    let is_valid_member = verify_merkle_membership(
+        leaf,
+        merkle_root,
+        merkle_path,
+        merkle_indices
+    );
+    assert(is_valid_member);
+
+    // ensure user_secret is not 0
+    assert(user_secret != 0);
+
+    std::println(f"Vote verified for poll {poll_id}");
 }
 
-#[test]
-fn test_main() {
-    main(1, 2);
+fn verify_merkle_membership(
+    leaf: Field,
+    root: Field,
+    path: [Field; MERKLE_TREE_DEPTH],
+    indices: [u1; MERKLE_TREE_DEPTH]
+) -> bool {
+    let mut current = leaf;
 
-    // Uncomment to make test fail
-    // main(1, 1);
+    for i in 0..MERKLE_TREE_DEPTH {
+        let path_element = path[i];
+        let is_right = indices[i];
+
+        if is_right == 0 {
+            // Current is left child
+            current = std::hash::pedersen_hash([current, path_element]);
+        } else {
+            // Current is right child
+            current = std::hash::pedersen_hash([path_element, current]);
+        }
+    }
+
+    current == root
 }
