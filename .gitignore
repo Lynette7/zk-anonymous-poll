@@ -1,0 +1,10 @@
+/node_modules
+/target
+.env
+/build
+Prover.toml
+Verifier.toml
+*.wasm
+*.vk
+*.pk
+*.proof

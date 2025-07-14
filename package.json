@@ -1,0 +1,17 @@
+{
+  "name": "zk-poll-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start:client": "npm start --prefix client",
+    "build:client": "npm run build --prefix client",
+    "install:client": "npm install --prefix client",
+    "build:circuits": "cd circuits && nargo compile",
+    "test:circuits": "cd circuits && nargo test",
+    "generate:proof": "node scripts/generate_proof.js",
+    "verify:proof": "node scripts/verify_proof.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
