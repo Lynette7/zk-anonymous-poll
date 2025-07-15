@@ -16,10 +16,12 @@ fn main(user_secret: Field,
 
     // verify that the nullifier is correctly computed
     let computed_nullifier = std::hash::pedersen_hash([user_secret, poll_id]);
+    // std::println(f"Computed nullifier: {computed_nullifier}");
     assert(nullifier == computed_nullifier);
 
     // Verify that the user is in the eligible voters merkle tree
     let leaf = std::hash::pedersen_hash([user_secret]);
+    // std::println(f"Leaf hash: {leaf}");
     let is_valid_member = verify_merkle_membership(
         leaf,
         merkle_root,
@@ -42,8 +44,10 @@ fn verify_merkle_membership(
 ) -> bool {
     let mut current = leaf;
 
+    // std::println(f"Starting with leaf: {leaf}");
     for i in 0..MERKLE_TREE_DEPTH {
         let path_element = path[i];
+        // std::println(f"Step {i}: current = {current}, path_element = {path_element}");
         let is_right = indices[i];
 
         if is_right == 0 {
@@ -54,6 +58,6 @@ fn verify_merkle_membership(
             current = std::hash::pedersen_hash([path_element, current]);
         }
     }
-
+    // std::println(f"Final computed root: {current}");
     current == root
 }
