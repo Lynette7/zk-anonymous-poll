@@ -11,7 +11,7 @@ cd circuits
 
 # Check if Noir project exists
 if [ ! -f "Nargo.toml" ]; then
-    echo "❌ Nargo.toml not found. Please run setup.sh first."
+    echo "❌ Nargo.toml not found."
     exit 1
 fi
 
