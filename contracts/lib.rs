@@ -233,8 +233,7 @@ mod contracts {
 
         #[ink(message)]
         pub fn verify_zk_proof(&self) -> bool {
-            // todo!()
-            true
+            todo!();
         }
     }
 }
