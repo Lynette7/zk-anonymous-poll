@@ -86,9 +86,7 @@ mod anonymous_poll {
         #[ink(topic)]
         poll_id: u128,
         creator: H160,
-        title: String,
         max_options: u32,
-        merkle_root: [u8; 32],
     }
 
     #[ink(event)]
@@ -263,7 +261,7 @@ mod anonymous_poll {
             public_inputs: Vec<u8>,
         ) -> Result<bool, Error> {
             // Solidity function signature: verify(bytes calldata proof, bytes calldata publicInputs)
-            let selector = ink::selector_bytes!("verify(bytes, bytes)");
+            let selector = solidity_selector("verify(bytes,bytes)");
 
             let result = build_call_sol::<DefaultEnvironment>()
                 .call(self.verifier_address)
