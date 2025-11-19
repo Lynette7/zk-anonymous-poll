@@ -260,6 +260,14 @@ mod anonymous_poll {
             proof: Vec<u8>,
             public_inputs: Vec<u8>,
         ) -> Result<bool, Error> {
+            /// Note that this is a const function, it is evaluated at compile time.
+            const fn solidity_selector(fn_sig: &str) -> [u8; 4] {
+                let output: [u8; 32] = const_crypto::sha3::Keccak256::new()
+                    .update(fn_sig.as_bytes())
+                    .finalize();
+                [output[0], output[1], output[2], output[3]]
+            }
+
             // Solidity function signature: verify(bytes calldata proof, bytes calldata publicInputs)
             let selector = solidity_selector("verify(bytes,bytes)");
 

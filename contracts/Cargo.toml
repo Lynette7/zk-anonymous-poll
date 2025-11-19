@@ -5,6 +5,7 @@ authors = ["[your_name] <[your_email]>"]
 edition = "2021"
 
 [dependencies]
+const-crypto = "0.3.0"
 ink = { version = "6.0.0-beta", default-features = false, features = ["unstable-hostfn"] }
 scale-info = { version = "2.11.6", default-features = false, features = ["derive"] }
 
